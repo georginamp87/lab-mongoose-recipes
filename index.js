@@ -21,7 +21,60 @@ mongoose
   })
   .then(() => {
     // Run your code here, after you have insured that the connection was made
+    let createRecipe = Recipe.create({title: 'French Onion Soup', cuisine: 'French'})
+    createRecipe.then((result) => {
+        console.log(result)
+    })
+    .catch(()=> {
+      console.log('Something went wrong with creating')
+    })
+
+    let getRecipes = Recipe.insertMany(data)
+    getRecipes.then((result) => {
+      result.forEach((elem)=> {
+        console.log(elem, title)
+      })
+    })
+    .catch(()=> {
+        console.log('Insert went wrong')
+    })
+
+    Promise.all([createRecipe, getRecipes])
+    .then(()=> {
+      let updateRecipe = Recipe.findOneAndUpdate({title: 'Rigatoni alla Genovese'} , {duration: 100})
+          updateRecipe
+          .then(() => {
+          console.log('Updated successfully!')
+          })
+          .catch(()=> {
+              console.log('Something went wrong while udpating')
+          })
+
+          let deleteRecipe = Recipe.deleteOne({title: 'Carrot Cake'})
+          deleteRecipe
+          .then(() => {
+            console.log('deleted successfully!')
+          })
+          .catch(()=> {
+            console.log('Something went wrong while deleting')
+          })
+        })
+    
+        Promise.all([updateRecipe, deleteRecipe])
+        .then(()=> {
+          mongoose.connection.close()
+        })
+        .catch(()=> {
+          console.log('Something went wrong while closing the connection')
+        })
+
+    .catch(()=> {
+      console.log('Something went wrong while promising')
+    })
+  
   })
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
+
+  
